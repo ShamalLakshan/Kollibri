@@ -1,4 +1,4 @@
-#include "./include/Timer.h"
+#include "../include/profiler/scoped_timer.h"
 #include <iostream>
 #include <thread>
 

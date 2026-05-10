@@ -1,4 +1,5 @@
-#include "../include/Timer.h"
+#include "../include/profiler/scoped_timer.h"
+
 
 Timer::Timer()
 {
