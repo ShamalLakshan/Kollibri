@@ -23,6 +23,9 @@ void profiler::ScopedTimer::Stop()
     auto duration = end - start;
     double ms = duration * 0.001;
 
-    std::cout << "Function Name: " << this->m_Name << " | Function Time: " << duration << "us (" << ms << "ms)\n";
+    // std::cout << "Record Call\n";
+    ProfilerSession::GetInstance().RecordEvent(m_Name, duration);
+
+    // std::cout << "Function Name: " << this->m_Name << " | Function Time: " << duration << "us (" << ms << "ms)\n";
 
 }

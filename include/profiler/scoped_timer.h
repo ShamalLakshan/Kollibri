@@ -1,17 +1,10 @@
+#pragma once
+#ifndef SCOPED_TIMER_H
+#define SCOPED_TIMER_H
+
+#include "./macros.h"
+#include "./session.h"
 #include <chrono>
-
-#ifdef ENABLE_PROFILING
-    // scope macro : required name input
-    #define PROFILE_SCOPE(name) profiler::ScopedTimer _timer_##__LINE__(name)
-
-    // automated function macro : just the call is enough.
-    #define PROFILE_FUNCTION() PROFILE_SCOPE(__FUNCTION__)
-#else
-    // this else block resolves to nothing if profiling is disabled
-    #define PROFILE_SCOPE(name)
-    #define PROFILE_FUNCTION()
-#endif
-
 
 namespace profiler 
 {
@@ -44,3 +37,5 @@ namespace profiler
         void Stop();
     };
 }
+
+#endif
