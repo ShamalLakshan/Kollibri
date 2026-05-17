@@ -1,8 +1,7 @@
 #include "../include/profiler/session.h"
 #include <iostream>
-#include <memory>
 
-ProfilerSession ProfilerSession::GetInstance()
+ProfilerSession& ProfilerSession::GetInstance()
 {
     static ProfilerSession m_session;
     return m_session;
@@ -13,14 +12,14 @@ void ProfilerSession::RecordEvent(const char* name, double duration)
     Event event(name, duration);
     std::cout <<  event.m_Name << " | " << event.m_Duration << '\n';
 
-    ProfilerSession::GetInstance().updateEventList(event);
+    GetInstance().updateEventList(event);
 
     // std::cout << "recorded: "<< ProfilerSession::GetInstance().m_eventList.size() << "\n";
 }
 
-void ProfilerSession::updateEventList(Event& event)
+void ProfilerSession::updateEventList(const Event& event)
 {
-    this->GetInstance().m_eventList.push_back(event);
+    m_eventList.push_back(event);
     std::cout << "update call\n";
 }
 

@@ -2,7 +2,6 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-#include <memory>
 #include <vector>
 
 struct Event {
@@ -18,10 +17,10 @@ class ProfilerSession
 private:
     std::vector<Event> m_eventList;
 public:
-    static ProfilerSession GetInstance();
+    static ProfilerSession& GetInstance();
     void RecordEvent(const char* name, double duration);
     void DumpReport(); // called at end of main or on demand
-    void updateEventList(Event& event);
+    void updateEventList(const Event& event);
 
     // // delete copy constructor
     // ProfilerSession(const ProfilerSession&) = delete;
