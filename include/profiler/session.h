@@ -20,16 +20,7 @@ public:
     static ProfilerSession& GetInstance();
     void RecordEvent(const char* name, double duration);
     void DumpReport(); // called at end of main or on demand
-    void updateEventList(const Event& event);
-
-    // // delete copy constructor
-    // ProfilerSession(const ProfilerSession&) = delete;
-    // // delete copy assign oprator
-    ProfilerSession& operator=(const ProfilerSession&) = delete;
-    // // delete move constructor
-    // ProfilerSession(ProfilerSession&&) = delete;
-    // //delete move assign operator
-    // ProfilerSession& operator=(ProfilerSession&&) = delete;
+    void updateEventList(const Event& event);   
 };
 
 

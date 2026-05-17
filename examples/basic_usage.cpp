@@ -23,7 +23,6 @@ void printRand02()
     PROFILE_FUNCTION();
     int j = 0;
     for(int i = 0; i < 100; i++)
-    PROFILE_SCOPE("second for loop");
     {
         j+=2;
     }
@@ -42,7 +41,6 @@ int main()
     printRand02();
     Sleep(1);
     ProfilerSession::GetInstance().DumpReport();
-    
-    std::cout << "End\n";
+
     return 0;
 }

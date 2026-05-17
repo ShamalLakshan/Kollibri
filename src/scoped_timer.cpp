@@ -1,5 +1,4 @@
 #include "../include/profiler/scoped_timer.h"
-#include <iostream>
 
 profiler::ScopedTimer::ScopedTimer(const char* name) : m_Name(name)
 {
@@ -23,9 +22,5 @@ void profiler::ScopedTimer::Stop()
     auto duration = end - start;
     double ms = duration * 0.001;
 
-    // std::cout << "Record Call\n";
     ProfilerSession::GetInstance().RecordEvent(m_Name, duration);
-
-    // std::cout << "Function Name: " << this->m_Name << " | Function Time: " << duration << "us (" << ms << "ms)\n";
-
 }
