@@ -1,5 +1,4 @@
 #include "../include/profiler/scoped_timer.h"
-#include <iostream>
 
 profiler::ScopedTimer::ScopedTimer(const char* name) : m_Name(name)
 {
@@ -26,9 +25,13 @@ void profiler::ScopedTimer::Stop()
     // Convert microseconds to nanoseconds
     auto duration_ns = std::chrono::nanoseconds(duration_us * 1000);
 
+<<<<<<< HEAD
     // std::cout << "Record Call\n";
     ProfilerSession::GetInstance().RecordEvent(m_Name, duration_ns);
 
     // std::cout << "Function Name: " << this->m_Name << " | Function Time: " << duration << "us (" << ms << "ms)\n";
 
+=======
+    ProfilerSession::GetInstance().RecordEvent(m_Name, duration);
+>>>>>>> 42b9668f94c9c42d1a7e9122f77a755bb5062777
 }
