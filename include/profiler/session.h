@@ -3,34 +3,41 @@
 #define SESSION_H
 
 #include <vector>
+#include <chrono>
+#include <map>
+#include <thread>
 
 struct Event {
-    const char* m_Name;
-    double m_Duration;
-    size_t m_Depth;         // for nesting later
-                          // later add type tag
-    Event(const char* name, double duration) : m_Name(name), m_Duration(duration) {};
+    const char* name;
+    std::chrono::nanoseconds duration;
+    size_t depth;        // for nesting later
+    
+    Event(const char* name, std::chrono::nanoseconds duration, size_t depth = 0) 
+        : name(name), duration(duration), depth(depth) {} // ctor
 };
 
 class ProfilerSession
 {
 private:
-    std::vector<Event> m_eventList;
-public:
-    static ProfilerSession& GetInstance();
-    void RecordEvent(const char* name, double duration);
-    void DumpReport(); // called at end of main or on demand
-    void updateEventList(const Event& event);
-
-    // // delete copy constructor
-    // ProfilerSession(const ProfilerSession&) = delete;
-    // // delete copy assign oprator
+    // Each thread gets its own vector (thread_local)
+    static thread_local std::vector<Event> m_eventList;
+    
+    // Collect all events from all threads -- called during reporting
+    std::map<std::thread::id, std::vector<Event>> CollectAllThreadEvents();
+    
+    // Private default constructor - singleton pattern
+    ProfilerSession() = default;
+    
+    // Delete copy operations
+    ProfilerSession(const ProfilerSession&) = delete;
     ProfilerSession& operator=(const ProfilerSession&) = delete;
-    // // delete move constructor
-    // ProfilerSession(ProfilerSession&&) = delete;
-    // //delete move assign operator
-    // ProfilerSession& operator=(ProfilerSession&&) = delete;
+    
+public:
+    // Singleton instance for global access
+    static ProfilerSession& GetInstance();
+    
+    static void RecordEvent(const char* name, std::chrono::nanoseconds duration);
+    static void DumpReport();
 };
-
 
 #endif

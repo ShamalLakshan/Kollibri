@@ -20,11 +20,14 @@ void profiler::ScopedTimer::Stop()
 
     auto end = std::chrono::time_point_cast<std::chrono::microseconds>(endTime).time_since_epoch().count();
 
-    auto duration = end - start;
-    double ms = duration * 0.001;
+    auto duration_us = end - start;  // duration in microseconds
+    double ms = duration_us * 0.001;
+
+    // Convert microseconds to nanoseconds
+    auto duration_ns = std::chrono::nanoseconds(duration_us * 1000);
 
     // std::cout << "Record Call\n";
-    ProfilerSession::GetInstance().RecordEvent(m_Name, duration);
+    ProfilerSession::GetInstance().RecordEvent(m_Name, duration_ns);
 
     // std::cout << "Function Name: " << this->m_Name << " | Function Time: " << duration << "us (" << ms << "ms)\n";
 
