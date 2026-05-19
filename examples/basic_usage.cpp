@@ -28,18 +28,19 @@ void printRand02()
     }
 }
 
-void Sleep(int sleepTime)
-{
-    PROFILE_FUNCTION(); // Automatically names this "Sleep"
+// void Sleep(int sleepTime)
+// {
+//     PROFILE_FUNCTION(); // Automatically names this "Sleep"
     
-    std::this_thread::sleep_for(std::chrono::seconds(sleepTime));
-}
+//     std::this_thread::sleep_for(std::chrono::seconds(sleepTime));
+// }
 
 int main()
 {   
     printRand();
     printRand02();
-    Sleep(1);
+    // Sleep(1);
+
     ProfilerSession::GetInstance().DumpReport();
 
     return 0;
