@@ -6,6 +6,8 @@
 #include <chrono>
 #include <map>
 #include <thread>
+#include <profiler/export.h>
+#include <profiler/scoped_timer.h>
 
 struct Event {
     const char* name;
@@ -34,10 +36,10 @@ private:
     
 public:
     // Singleton instance for global access
-    static ProfilerSession& GetInstance();
+    KOLLIBRI_API static ProfilerSession& GetInstance();
     
-    static void RecordEvent(const char* name, std::chrono::nanoseconds duration);
-    static void DumpReport();
+    KOLLIBRI_API static void RecordEvent(const char* name, std::chrono::nanoseconds duration);
+    KOLLIBRI_API static void DumpReport();
 };
 
 #endif

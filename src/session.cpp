@@ -1,6 +1,5 @@
 #include "../include/profiler/session.h"
 #include <chrono>
-#include <cstddef>
 #include <iostream>
 #include <iomanip>
 #include <mutex>
@@ -51,7 +50,7 @@ void ProfilerSession::DumpReport()
 {
     auto allEvents = GetInstance().CollectAllThreadEvents();
     int noOfEvents = 0;
-    std::chrono::nanoseconds totalMeasuredTime;
+    std::chrono::nanoseconds totalMeasuredTime{0};
     
     std::cout << "=== Profiler Report ===\n";
     std::cout << std::setw(20) << "Thread ID" 

@@ -1,7 +1,12 @@
-# MemProf
+<div align="center">
+<h1>Kollibri</h1>
+<img src="./project-logo/logo.png" alt="Kollibri Logo" width="200" style="max-width: 100%; height: auto;">
+</div>
 
 A lightweight C++ profiling library with RAII scoped timers, memory tracking,
-and object lifetime instrumentation. Zero overhead when disabled.
+and object lifetime tracking. Zero overhead when disabled.
+
+> This project is a work in progress; I develop it to improve my C++ skills and to learn build systems and internals of standard C/CPP development.
 
 ## Prerequisites
 
@@ -13,8 +18,8 @@ and object lifetime instrumentation. Zero overhead when disabled.
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-org/MemProf.git
-cd MemProf
+git clone https://github.com/your-org/Kollibri.git
+cd Kollibri
 
 ### 2. Configure
 
@@ -26,39 +31,9 @@ cmake ..
 
 cmake --build .
 
+This builds `kollibri_static`, `kollibri_shared`, and `kollibri_example`.
+
 ### 4. Run the example
 
-./memprof_example          # On Windows: memprof_example.exe
+./kollibri_example         # On Windows: kollibri_example.exe
 
-## clangd setup (VS Code)
-
-For accurate IntelliSense, generate a compilation database and create a
-symlink at the project root:
-
-1. Ensure your CMakeLists.txt contains:
-
-   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-2. Reconfigure:
-
-   cd build && cmake ..
-
-3. From the project root, create the link:
-
-   ln -s build/compile_commands.json .
-
-   (On Windows you can use `mklink` from an admin command prompt or simply
-   copy the file with `cp build/compile_commands.json .`)
-
-4. Restart the clangd language server in VS Code.
-
-## Project structure
-
-MemProf/
-├── include/profiler/   # Public headers
-├── src/                # Implementation
-│   └── writers/        # Output backends (console, JSON)
-├── examples/           # Usage examples
-├── tests/              # Unit tests
-├── CMakeLists.txt      # Build configuration
-└── README.md           # This file
