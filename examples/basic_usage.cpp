@@ -1,13 +1,10 @@
-#define ENABLE_PROFILING   // comment this to disable profiling 
-
-#include "../include/profiler/scoped_timer.h"
+#include <profiler/profiler.h>
 #include <thread>
 #include <iostream>
 
 void printRand()
 {
     PROFILE_FUNCTION(); // Automatically names this "printRand"
-
     {
         PROFILE_SCOPE("just for loop");
         int j;
@@ -28,18 +25,19 @@ void printRand02()
     }
 }
 
-void Sleep(int sleepTime)
-{
-    PROFILE_FUNCTION(); // Automatically names this "Sleep"
+// void Sleep(int sleepTime)
+// {
+//     PROFILE_FUNCTION(); // Automatically names this "Sleep"
     
-    std::this_thread::sleep_for(std::chrono::seconds(sleepTime));
-}
+//     std::this_thread::sleep_for(std::chrono::seconds(sleepTime));
+// }
 
 int main()
 {   
     printRand();
     printRand02();
-    Sleep(1);
+    // Sleep(1);
+
     ProfilerSession::GetInstance().DumpReport();
 
     return 0;

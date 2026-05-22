@@ -2,6 +2,7 @@
 #ifndef SCOPED_TIMER_H
 #define SCOPED_TIMER_H
 
+#include <profiler/export.h>
 #include "./macros.h"
 #include "./session.h"
 #include <chrono>
@@ -16,10 +17,10 @@ namespace profiler
 
     public:
         // named constructor
-        ScopedTimer(const char* name);
+        KOLLIBRI_API ScopedTimer(const char* name);
 
         // destructor
-        ~ScopedTimer() noexcept; // destructor should be disable of throws.
+        KOLLIBRI_API ~ScopedTimer() noexcept; // destructor should be disable of throws.
 
         // delete copy constructor
         ScopedTimer(const ScopedTimer&) = delete;
@@ -34,7 +35,7 @@ namespace profiler
         ScopedTimer& operator=(ScopedTimer&&) = delete;
 
         // stop sequence isolated from destructor
-        void Stop();
+        KOLLIBRI_API void Stop();
     };
 }
 
