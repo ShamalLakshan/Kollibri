@@ -18,7 +18,7 @@ and object lifetime tracking. Zero overhead when disabled.
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-org/Kollibri.git
+git clone https://github.com/ShamalLakshan/Kollibri.git
 cd Kollibri
 
 ### 2. Configure
