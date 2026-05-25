@@ -1,23 +1,25 @@
-#include "../include/profiler/session.h"
 #include <chrono>
+#include <cstddef>
 #include <iostream>
 #include <iomanip>
 #include <mutex>
+#include "profiler/session.h"
+#include "profiler/scoped_timer.h"
 
 // Defining a thread local vector // Each thread has its own copy
-thread_local std::vector<Event> ProfilerSession::m_eventList;
+thread_local std::vector<Event> profiler::ProfilerSession::m_eventList;
 
 // Map to track which threads exist
 static std::map<std::thread::id, std::vector<Event>*> g_threadVectors;// requires synchronization
 static std::mutex g_threadsMutex;
 
-ProfilerSession& ProfilerSession::GetInstance()
+profiler::ProfilerSession& profiler::ProfilerSession::GetInstance()
 {
     static ProfilerSession m_session;
     return m_session;
 }
 
-void ProfilerSession::RecordEvent(const char* name, std::chrono::nanoseconds duration)
+void profiler::ProfilerSession::RecordEvent(const char* name, std::chrono::nanoseconds duration, size_t depth)
 {
     // Register this threads vector on first call
     static thread_local bool registered = false;
@@ -29,10 +31,10 @@ void ProfilerSession::RecordEvent(const char* name, std::chrono::nanoseconds dur
     }
     
     // NO LOCKS NEEDED - each thread writes to its own vector
-    m_eventList.push_back(Event(name, duration));
+    m_eventList.push_back(Event(name, duration, depth));
 }
 
-std::map<std::thread::id, std::vector<Event>> ProfilerSession::CollectAllThreadEvents()
+std::map<std::thread::id, std::vector<Event>> profiler::ProfilerSession::CollectAllThreadEvents()
 {   
     std::map<std::thread::id, std::vector<Event>> allEvents;
     {
@@ -46,7 +48,7 @@ std::map<std::thread::id, std::vector<Event>> ProfilerSession::CollectAllThreadE
     return allEvents;
 }
 
-void ProfilerSession::DumpReport()
+void profiler::ProfilerSession::DumpReport()
 {
     auto allEvents = GetInstance().CollectAllThreadEvents();
     int noOfEvents = 0;
@@ -55,7 +57,8 @@ void ProfilerSession::DumpReport()
     std::cout << "=== Profiler Report ===\n";
     std::cout << std::setw(20) << "Thread ID" 
                 << std::setw(25) << "Event Name" 
-                << std::setw(20) << "Duration (ns)" << "\n";
+                << std::setw(20) << "Duration (ns)"
+                << std::setw(25) << "Depth"  << "\n";
     std::cout << std::string(65, '-') << "\n";
     
     for (auto& pair : allEvents) 
@@ -66,7 +69,8 @@ void ProfilerSession::DumpReport()
         {
             std::cout << std::setw(20) << threadId
             << std::setw(25) << event.name
-            << std::setw(20) << event.duration.count() << "\n";
+            << std::setw(20) << event.duration.count()
+            << std::setw(25) << event.depth << "\n";
             noOfEvents++;
             totalMeasuredTime += event.duration;
         }
@@ -74,5 +78,14 @@ void ProfilerSession::DumpReport()
     std::cout << "\n=== Aggregation Report ===\n";
     std::cout <<  "No of measured functions: " << noOfEvents;
     std::cout <<  "\nTotal measured time: " << totalMeasuredTime.count() << "ns \n";
+}
 
+void profiler::ProfilerSession::push(const profiler::ScopedTimer* timerObject) 
+{
+    GetInstance().m_Stack.push_back(timerObject);
+}
+
+size_t profiler::ProfilerSession::GetDepth()
+{
+    return GetInstance().m_Stack.size();
 }
