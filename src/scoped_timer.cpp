@@ -1,9 +1,11 @@
 #include "../include/profiler/scoped_timer.h"
 
+//constructor
 profiler::ScopedTimer::ScopedTimer(const char* name) : m_Name(name)
 {
+    m_Depth = ProfilerSession::GetInstance().GetDepth();
+    ProfilerSession::GetInstance().push(this);
     m_StartTime = std::chrono::high_resolution_clock::now();
-
 }
 
 profiler::ScopedTimer::~ScopedTimer() noexcept
@@ -13,6 +15,13 @@ profiler::ScopedTimer::~ScopedTimer() noexcept
 
 void profiler::ScopedTimer::Stop()
 {
+    if (m_Stopped)
+    {
+        return;
+    }
+
+    m_Stopped = true;
+
     auto endTime = std::chrono::high_resolution_clock::now();
 
     auto start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTime).time_since_epoch().count();
@@ -26,5 +35,6 @@ void profiler::ScopedTimer::Stop()
     auto duration_ns = std::chrono::nanoseconds(duration_us * 1000);
 
     // std::cout << "Record Call\n";
-    ProfilerSession::GetInstance().RecordEvent(m_Name, duration_ns);
+    ProfilerSession::GetInstance().RecordEvent(m_Name, duration_ns, m_Depth);
+    ProfilerSession::GetInstance().pop();
 }
