@@ -8,6 +8,7 @@
 
 // Defining a thread local vector // Each thread has its own copy
 thread_local std::vector<Event> profiler::ProfilerSession::m_eventList;
+thread_local std::vector<const profiler::ScopedTimer*> profiler::ProfilerSession::m_Stack;
 
 // Map to track which threads exist
 static std::map<std::thread::id, std::vector<Event>*> g_threadVectors;// requires synchronization
@@ -54,12 +55,11 @@ void profiler::ProfilerSession::DumpReport()
     int noOfEvents = 0;
     std::chrono::nanoseconds totalMeasuredTime{0};
     
-    std::cout << "=== Profiler Report ===\n";
     std::cout << std::setw(20) << "Thread ID" 
                 << std::setw(25) << "Event Name" 
                 << std::setw(20) << "Duration (ns)"
-                << std::setw(25) << "Depth"  << "\n";
-    std::cout << std::string(65, '-') << "\n";
+                << std::setw(5) << "Depth"  << "\n";
+    std::cout << std::string(75, '-') << "\n";
     
     for (auto& pair : allEvents) 
     {
@@ -70,19 +70,28 @@ void profiler::ProfilerSession::DumpReport()
             std::cout << std::setw(20) << threadId
             << std::setw(25) << event.name
             << std::setw(20) << event.duration.count()
-            << std::setw(25) << event.depth << "\n";
+            << std::setw(5) << event.depth + 1<< "\n";
             noOfEvents++;
             totalMeasuredTime += event.duration;
         }
     }
     std::cout << "\n=== Aggregation Report ===\n";
-    std::cout <<  "No of measured functions: " << noOfEvents;
+    std::cout <<  "No of measurements: " << noOfEvents;
     std::cout <<  "\nTotal measured time: " << totalMeasuredTime.count() << "ns \n";
 }
 
 void profiler::ProfilerSession::push(const profiler::ScopedTimer* timerObject) 
 {
     GetInstance().m_Stack.push_back(timerObject);
+}
+
+void profiler::ProfilerSession::pop()
+{
+    auto& stack = GetInstance().m_Stack;
+    if (!stack.empty())
+    {
+        stack.pop_back();
+    }
 }
 
 size_t profiler::ProfilerSession::GetDepth()

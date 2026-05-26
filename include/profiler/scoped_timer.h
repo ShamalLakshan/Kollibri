@@ -16,6 +16,7 @@ namespace profiler
         const char* m_Name;
         std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTime;
         size_t m_Depth;
+        bool m_Stopped = false;
 
     public:
         // named constructor

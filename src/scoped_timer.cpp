@@ -15,6 +15,13 @@ profiler::ScopedTimer::~ScopedTimer() noexcept
 
 void profiler::ScopedTimer::Stop()
 {
+    if (m_Stopped)
+    {
+        return;
+    }
+
+    m_Stopped = true;
+
     auto endTime = std::chrono::high_resolution_clock::now();
 
     auto start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTime).time_since_epoch().count();
@@ -29,4 +36,5 @@ void profiler::ScopedTimer::Stop()
 
     // std::cout << "Record Call\n";
     ProfilerSession::GetInstance().RecordEvent(m_Name, duration_ns, m_Depth);
+    ProfilerSession::GetInstance().pop();
 }

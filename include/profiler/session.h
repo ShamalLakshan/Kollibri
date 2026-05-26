@@ -48,6 +48,7 @@ namespace profiler {
 
         // Depth Stack Operations
         KOLLIBRI_API static void push(const ScopedTimer* timerObject);
+        KOLLIBRI_API static void pop();
         KOLLIBRI_API static size_t GetDepth();
     };
 }
