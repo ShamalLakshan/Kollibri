@@ -52,32 +52,35 @@ std::map<std::thread::id, std::vector<Event>> profiler::ProfilerSession::Collect
 void profiler::ProfilerSession::DumpReport()
 {
     auto allEvents = GetInstance().CollectAllThreadEvents();
-    int noOfEvents = 0;
-    std::chrono::nanoseconds totalMeasuredTime{0};
+    // int noOfEvents = 0;
+    // std::chrono::nanoseconds totalMeasuredTime{0};
     
-    std::cout << std::setw(20) << "Thread ID" 
-                << std::setw(25) << "Event Name" 
-                << std::setw(20) << "Duration (ns)"
-                << std::setw(5) << "Depth"  << "\n";
-    std::cout << std::string(75, '-') << "\n";
+    // std::cout << std::setw(20) << "Thread ID" 
+    //             << std::setw(25) << "Event Name" 
+    //             << std::setw(20) << "Duration (ns)"
+    //             << std::setw(5) << "Depth"  << "\n";
+    // std::cout << std::string(75, '-') << "\n";
     
-    for (auto& pair : allEvents) 
-    {
-        auto& threadId = pair.first;
-        auto& events = pair.second;
-        for (auto& event : events)
-        {
-            std::cout << std::setw(20) << threadId
-            << std::setw(25) << event.name
-            << std::setw(20) << event.duration.count()
-            << std::setw(5) << event.depth + 1<< "\n";
-            noOfEvents++;
-            totalMeasuredTime += event.duration;
-        }
-    }
-    std::cout << "\n=== Aggregation Report ===\n";
-    std::cout <<  "No of measurements: " << noOfEvents;
-    std::cout <<  "\nTotal measured time: " << totalMeasuredTime.count() << "ns \n";
+    // for (auto& pair : allEvents) 
+    // {
+    //     auto& threadId = pair.first;
+    //     auto& events = pair.second;
+    //     for (auto& event : events)
+    //     {
+    //         std::cout << std::setw(20) << threadId
+    //         << std::setw(25) << event.name
+    //         << std::setw(20) << event.duration.count()
+    //         << std::setw(5) << event.depth + 1<< "\n";
+    //         noOfEvents++;
+    //         totalMeasuredTime += event.duration;
+    //     }
+    // }
+    // std::cout << "\n=== Aggregation Report ===\n";
+    // std::cout <<  "No of measurements: " << noOfEvents;
+    // std::cout <<  "\nTotal measured time: " << totalMeasuredTime.count() << "ns \n";
+
+
+    // Need to build a method to call Console Writer from here. 
 }
 
 void profiler::ProfilerSession::push(const profiler::ScopedTimer* timerObject) 

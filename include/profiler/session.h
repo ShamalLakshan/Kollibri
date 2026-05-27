@@ -5,18 +5,11 @@
 
 #include <vector>
 #include <chrono>
-#include <map>
-#include <thread>
+#include <profiler/Event.h>
 #include <profiler/export.h>
+#include <profiler/IWriter.h>
+// #include <profiler/IWriter.h>
 
-struct Event {
-    const char* name;
-    std::chrono::nanoseconds duration;
-    size_t depth;        // for nesting later
-    
-    Event(const char* name, std::chrono::nanoseconds duration, size_t depth = 0) 
-        : name(name), duration(duration), depth(depth) {} // ctor
-};
 
 namespace profiler {
     class ScopedTimer;   // Forward declaration
