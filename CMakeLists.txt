@@ -8,6 +8,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(KOLLIBRI_SOURCES
     src/scoped_timer.cpp
     src/session.cpp
+    src/writers/console_writer.cpp
 )
 
 add_library(kollibri_static STATIC ${KOLLIBRI_SOURCES})
