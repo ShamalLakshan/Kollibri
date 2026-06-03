@@ -53,6 +53,8 @@ void profiler::ProfilerSession::DumpReport()
     auto allEvents = GetInstance().CollectAllThreadEvents();
     ConsoleWriter consoleWriter;
     consoleWriter.WriteHeader();
+    consoleWriter.WriteEntry(allEvents, true);
+    consoleWriter.WriteFooter();
 }
 
 void profiler::ProfilerSession::push(const profiler::ScopedTimer* timerObject) 

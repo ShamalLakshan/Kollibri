@@ -12,7 +12,7 @@ class IWriter
 public:
     virtual ~IWriter() = default;
     virtual void WriteHeader() = 0;
-    virtual void WriteEntry(const std::map<std::thread::id, std::vector<Event>>& AggregatedData, bool WriteAggregationReport) = 0;
+    virtual void WriteEntry(std::map<std::thread::id, std::vector<Event>> AggregatedData, bool WriteReport) = 0;
     virtual void WriteAggregationReport() = 0; // plan : call from WriteEntry to print (decide data type later)
     virtual void WriteFooter() = 0;
 };

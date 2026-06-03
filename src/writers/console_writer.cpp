@@ -13,7 +13,7 @@ void ConsoleWriter::WriteHeader()
 }
 
 
-void ConsoleWriter::WriteEntry(const std::map<std::thread::id, std::vector<Event>>& AggregatedData, bool WriteAggregationReport)
+void ConsoleWriter::WriteEntry(std::map<std::thread::id, std::vector<Event>> AggregatedData, bool WriteReport)
 {
     int noOfEvents = 0;
     std::chrono::nanoseconds totalMeasuredTime{0};
@@ -32,11 +32,9 @@ void ConsoleWriter::WriteEntry(const std::map<std::thread::id, std::vector<Event
             totalMeasuredTime += event.duration;
         }
     }
-    if(WriteAggregationReport)
+    if(WriteReport)
     {
         this->WriteAggregationReport();
-        std::cout <<  "No of measurements: " << noOfEvents;
-        std::cout <<  "\nTotal measured time: " << totalMeasuredTime.count() << "ns \n";
     }
 }
 

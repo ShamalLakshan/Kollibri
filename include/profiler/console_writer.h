@@ -12,7 +12,7 @@ class ConsoleWriter : public IWriter
 {
 public:
     void WriteHeader() override;
-    void WriteEntry(const std::map<std::thread::id, std::vector<Event>>& AggregatedData, bool WriteAggregationReport) override;
+    void WriteEntry(std::map<std::thread::id, std::vector<Event>> AggregatedData, bool WriteReport) override;
     void WriteAggregationReport() override;
     void WriteFooter() override;
 };
