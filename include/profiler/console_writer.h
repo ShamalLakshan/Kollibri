@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <chrono>
+#include <sstream>
 
 #include "../../include/profiler/IWriter.h"
 
