@@ -37,3 +37,38 @@ This builds `kollibri_static`, `kollibri_shared`, and `kollibri_example`.
 
 ./kollibri_example         # On Windows: kollibri_example.exe
 
+## Usage
+
+```cpp
+#include <profiler/profiler.h>
+
+void doWork() {
+    PROFILE_FUNCTION();
+    {
+        PROFILE_SCOPE("work_scope");
+        // profiled code
+    }
+}
+
+int main() {
+    PROFILE_SET_THREAD_NAME("MainThread");
+    doWork();
+    // report automatically dumps on exit, or call manually:
+    profiler::ProfilerSession::DumpReport();
+}
+```
+
+## Testing
+
+Run tests with `ctest`:
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+To compile with profiling disabled (zero overhead):
+
+```bash
+cmake -B build -S . -DENABLE_PROFILING=OFF
+```
+

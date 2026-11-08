@@ -11,10 +11,14 @@
 
     // automated function macro : just the call is enough.
     #define PROFILE_FUNCTION() PROFILE_SCOPE(__FUNCTION__)
+
+    // set thread name macro
+    #define PROFILE_SET_THREAD_NAME(name) profiler::ProfilerSession::SetThreadName(name)
 #else
     // this else block resolves to nothing if profiling is disabled
     #define PROFILE_SCOPE(name)
     #define PROFILE_FUNCTION()
+    #define PROFILE_SET_THREAD_NAME(name)
 #endif
 
 #endif

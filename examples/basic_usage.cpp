@@ -5,7 +5,7 @@
 #include <cmath>
 
 // ------------------------------------------------------------------
-// 1. Simple function with a single scope
+// simple function with a single scope
 // ------------------------------------------------------------------
 void simpleFunction() {
     PROFILE_FUNCTION();
@@ -15,7 +15,7 @@ void simpleFunction() {
 }
 
 // ------------------------------------------------------------------
-// 2. Nested manual scopes
+// nested scopes
 // ------------------------------------------------------------------
 void nestedScopes() {
     PROFILE_FUNCTION();
@@ -32,7 +32,7 @@ void nestedScopes() {
 }
 
 // ------------------------------------------------------------------
-// 3. Function calling another function (two levels)
+// call tree
 // ------------------------------------------------------------------
 void leafFunction() {
     PROFILE_FUNCTION();
@@ -45,14 +45,14 @@ void callTree() {
 }
 
 // ------------------------------------------------------------------
-// 4. Three-level call chain
+// three-level call chain
 // ------------------------------------------------------------------
 void deepLeaf() { PROFILE_FUNCTION(); volatile int x=0; for(int i=0;i<1000;++i)x++; }
 void midLevel() { PROFILE_FUNCTION(); deepLeaf(); }
 void topLevel() { PROFILE_FUNCTION(); midLevel(); }
 
 // ------------------------------------------------------------------
-// 5. Recursive function (limited depth)
+// recursive calls
 // ------------------------------------------------------------------
 void recursive(int depth) {
     PROFILE_FUNCTION();
@@ -63,20 +63,20 @@ void recursive(int depth) {
 }
 
 // ------------------------------------------------------------------
-// 6. Early return inside a profiled scope
+// early return inside scope
 // ------------------------------------------------------------------
 void earlyReturn(bool doReturn) {
     PROFILE_FUNCTION();
     {
         PROFILE_SCOPE("early scope");
-        if (doReturn) return;   // destructor still fires for the scope
+        if (doReturn) return;
         int x = 0;
         for (int i=0;i<1000;++i) x+=i;
     }
 }
 
 // ------------------------------------------------------------------
-// 7. Exception throw and catch inside a profiled function
+// exception throw and catch
 // ------------------------------------------------------------------
 void thrower() {
     PROFILE_FUNCTION();
@@ -90,12 +90,11 @@ void exceptionTest() {
     try {
         thrower();
     } catch (...) {
-        // ignored
     }
 }
 
 // ------------------------------------------------------------------
-// 8. Loop with scoped timers inside
+// loop with scopes
 // ------------------------------------------------------------------
 void loopWithScopes() {
     PROFILE_FUNCTION();
@@ -107,7 +106,7 @@ void loopWithScopes() {
 }
 
 // ------------------------------------------------------------------
-// 9. Function that calls another profiled function multiple times
+// multiple calls to helper
 // ------------------------------------------------------------------
 void helper() { PROFILE_FUNCTION(); volatile int x=0; for(int i=0;i<500;++i)x+=i; }
 void multipleCalls() {
@@ -118,13 +117,13 @@ void multipleCalls() {
 }
 
 // ------------------------------------------------------------------
-// 10. Two separate functions to compare flat times
+// flat functions
 // ------------------------------------------------------------------
 void busyWork1() { PROFILE_FUNCTION(); volatile int s=0; for(int i=0;i<20000;++i)s+=i; }
 void busyWork2() { PROFILE_FUNCTION(); volatile int s=0; for(int i=0;i<40000;++i)s+=i; }
 
 // ------------------------------------------------------------------
-// 11. Same function with and without profiling macro (disabled by kill switch)
+// kill switch check
 // ------------------------------------------------------------------
 void dummyWork() {
     PROFILE_FUNCTION();
@@ -133,7 +132,7 @@ void dummyWork() {
 }
 
 // ------------------------------------------------------------------
-// 12. Function with multiple scopes on the same level
+// multiple scopes on same level
 // ------------------------------------------------------------------
 void multipleScopesSameLevel() {
     PROFILE_FUNCTION();
@@ -148,7 +147,7 @@ void multipleScopesSameLevel() {
 }
 
 // ------------------------------------------------------------------
-// 13. Scoped timer inside a conditional block
+// conditional scope
 // ------------------------------------------------------------------
 void conditionalScope(bool flag) {
     PROFILE_FUNCTION();
@@ -162,7 +161,7 @@ void conditionalScope(bool flag) {
 }
 
 // ------------------------------------------------------------------
-// 14. Very deep nesting (but not recursive)
+// deep nesting
 // ------------------------------------------------------------------
 void deepNesting() {
     PROFILE_FUNCTION();
@@ -178,15 +177,14 @@ void deepNesting() {
 }
 
 // ------------------------------------------------------------------
-// 15. Function that does nothing (empty scope)
+// empty scope
 // ------------------------------------------------------------------
 void emptyFunction() {
     PROFILE_FUNCTION();
-    // nothing
 }
 
 // ------------------------------------------------------------------
-// 16. STL vector push_back inside profiled scope (heap usage)
+// vector work
 // ------------------------------------------------------------------
 void vectorWork() {
     PROFILE_FUNCTION();
@@ -195,7 +193,7 @@ void vectorWork() {
 }
 
 // ------------------------------------------------------------------
-// 17. Math function with scoped operation
+// math loop
 // ------------------------------------------------------------------
 void mathHeavy() {
     PROFILE_FUNCTION();
@@ -208,7 +206,7 @@ void mathHeavy() {
 }
 
 // ------------------------------------------------------------------
-// 18. Function that calls a lambda with profiling
+// lambda with profiling
 // ------------------------------------------------------------------
 void lambdaTest() {
     PROFILE_FUNCTION();
@@ -221,7 +219,7 @@ void lambdaTest() {
 }
 
 // ------------------------------------------------------------------
-// 19. Thread sleep to see measurable duration
+// thread sleep
 // ------------------------------------------------------------------
 void sleepFunction() {
     PROFILE_FUNCTION();
@@ -232,7 +230,7 @@ void sleepFunction() {
 }
 
 // ------------------------------------------------------------------
-// 20. Function with a loop that creates and destroys timers rapidly
+// rapid timer creation
 // ------------------------------------------------------------------
 void rapidScopes() {
     PROFILE_FUNCTION();
@@ -243,11 +241,23 @@ void rapidScopes() {
 }
 
 // ------------------------------------------------------------------
+// worker thread
+// ------------------------------------------------------------------
+void workerTask() {
+    PROFILE_SET_THREAD_NAME("WorkerThread");
+    PROFILE_FUNCTION();
+    {
+        PROFILE_SCOPE("worker computation");
+        volatile int sum = 0;
+        for (int i = 0; i < 20000; ++i) sum += i;
+    }
+}
+
+// ------------------------------------------------------------------
 // Main driver
 // ------------------------------------------------------------------
 int main() {
-    // Optionally start the session explicitly (if your design supports it)
-    // profiler::ProfilerSession::GetInstance().BeginSession();
+    PROFILE_SET_THREAD_NAME("MainThread");
 
     std::cout << "==== Running Profiler Tests ====\n";
 
@@ -274,6 +284,10 @@ int main() {
     lambdaTest();
     sleepFunction();
     rapidScopes();
+
+    // Run work on a separate worker thread
+    std::thread worker(workerTask);
+    worker.join();
 
     std::cout << "\n==== Profiler Report ====\n";
     profiler::ProfilerSession::GetInstance().DumpReport();
